@@ -34,6 +34,7 @@ public class StudentService {
                 response.setMessage("Student already present");
                 response.setStatusCode(HttpStatus.BAD_REQUEST.value());
             } else {
+                studentRepo.save(student);
                 response.setEntity(student);
                 response.setMessage("Student added successfully");
                 response.setStatusCode(HttpStatus.OK.value());
@@ -66,11 +67,26 @@ public class StudentService {
         }
         return response;
     }
+    public EntityResponse getStudent(Long id) {
+        EntityResponse response = new EntityResponse<>();
+        Optional<Student> student = studentRepo.findById(id);
+        if (!student.isEmpty()) {
+            response.setEntity(student);
+            response.setMessage("Here is your student");
+            response.setStatusCode(HttpStatus.OK.value());
+        } else {
+            response.setEntity(null);
+            response.setMessage("Not found");
+        }
+        return response;
+    }
 
-    public EntityResponse UpdateStudent(Student request) {
+
+
+    public EntityResponse UpdateStudent(Student request, Long id) {
         EntityResponse response = new EntityResponse<>();
         try {
-            Optional<Student> student = studentRepo.findById(request.getId());
+            Optional<Student> student = studentRepo.findById(id);
             if (student.isPresent()) {
                 Student studentData = student.get();
                 if (request.getStudentName() != null) {
@@ -82,7 +98,7 @@ public class StudentService {
                 if (request.getStudentEmailAddress() != null) {
                     studentData.setRegistrationNumber(request.getRegistrationNumber());
                 }
-                Student updateStude = studentRepo.save(studentData);
+                Student updateStudent = studentRepo.save(studentData);
                 response.setEntity(student);
                 response.setMessage("student is updated successfully");
                 response.setStatusCode(HttpStatus.ACCEPTED.value());

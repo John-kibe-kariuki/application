@@ -21,9 +21,14 @@ public class StudentController {
     public ResponseEntity<EntityResponse>getStudents(){
         EntityResponse response=studentService.getSudents();
         return  ResponseEntity.status(response.getStatusCode()).body(response);}
-    @PutMapping("update")
-    public ResponseEntity<EntityResponse>updateStudent(@RequestBody Student request){
-        EntityResponse response=studentService.UpdateStudent(request);
+    @GetMapping("Your-student")
+    public ResponseEntity<EntityResponse>getStudent(@RequestParam Long id){
+        EntityResponse response=studentService.getStudent(id);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+    @PutMapping("update/{id}")
+    public ResponseEntity<EntityResponse>updateStudent(@RequestBody Student request,@RequestParam Long id){
+        EntityResponse response=studentService.UpdateStudent(request,id);
         return ResponseEntity.status(response.getStatusCode()).body(response);}
     @DeleteMapping("delete")
     public ResponseEntity<EntityResponse>deleteStudent(@RequestParam Long id){
